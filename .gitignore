@@ -1,0 +1,17 @@
+# Node
+node_modules/
+.env
+dist/
+coverage/
+.DS_Store
+
+# Sequelize CLI artifacts
+src/seeders/
+src/migrations/
+
+# Logs
+logs/
+*.log
+
+# Docker volumes
+postgres_data/

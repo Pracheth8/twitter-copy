@@ -1,2 +1,7 @@
-const { Redis } = require('ioredis');
-module.exports = new Redis(process.env.REDIS_URL);
+import Redis from 'ioredis';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const redis = new Redis(process.env.REDIS_URL);
+
+export default redis; // ✅ This enables 'import redis from ...'
