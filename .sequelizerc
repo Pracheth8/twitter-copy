@@ -1,0 +1,2 @@
+import Follow from './models/follow.model.js';
+// sequelize.sync({ alter: true }) or use migrations
