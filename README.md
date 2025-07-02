@@ -168,23 +168,31 @@ curl http://localhost:7000/api/following/<USER_ID>
 ## 🧰 Environment Variables (`.env`)
 
 ```env
-PORT=7000
-DB_HOST=db
+
+# PostgreSQL
+DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=twitterdb
 DB_USER=postgres
-DB_PASS=postgres
+DB_PASS=password
+DATABASE_URL=postgres://postgres:password@localhost:5432/twitterdb
+EMAIL_USER=useremail.com
+EMAIL_PASS= mypassword
 
+PORT=7000
+
+# JWT
+JWT_SECRET=thisismysecret
+JWT_EXPIRES_IN=60m
+JWT_REFRESH_EXPIRES_IN=1d
+
+DATABASE_URL=postgres://postgres:password@db:5432/twitterdb
+
+# Redis
+REDIS_URL=redis://redis:6379
 REDIS_HOST=redis
 REDIS_PORT=6379
 
-JWT_ACCESS_SECRET=supersecretaccess
-JWT_REFRESH_SECRET=supersecretrefresh
-
-SMTP_HOST=smtp.ethereal.email
-SMTP_PORT=587
-SMTP_USER=your_user
-SMTP_PASS=your_pass
 ```
 
 ---
