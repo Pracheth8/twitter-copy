@@ -1,10 +1,12 @@
 import User from '../models/user.model.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
-import redis from '../config/redis.js';
+import redisClient from '../config/redis.js';
 import { isStrongPassword } from '../utils/validatePassword.js';
 import { blacklistToken } from '../services/blacklist.service.js';
 import { isTokenBlacklisted } from '../services/blacklist.service.js';
 import jwt from 'jsonwebtoken';
+import { sendResetOTPEmail } from '../queues/email.queue.js';
+import { generateOTP } from '../utils/generateOTP.js';
 
 export const register = async (req, res) => {
   try {
@@ -75,3 +77,48 @@ export async function refreshToken(req, res) {
     res.status(401).json({ message: 'Invalid refresh token' });
   }
 }
+
+export const requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const otp = generateOTP();
+    await redisClient.set(`otp:${email}`, otp, 'EX', 300); 
+    console.log("otp:",otp);
+
+    await sendResetOTPEmail(email, otp);
+
+    res.status(200).json({ message: 'OTP sent to your email' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    if (!isStrongPassword(newPassword)) {
+      return res.status(400).json({ message: 'Password does not meet strength requirements' });
+    }
+
+    const storedOTP = await redisClient.get(`otp:${email}`);
+    if (!storedOTP || storedOTP !== otp) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.password = newPassword;
+    await user.save();
+
+    await redisClient.del(`otp:${email}`); // Invalidate OTP after use
+
+    res.status(200).json({ message: 'Password reset successful' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};

@@ -1,5 +1,5 @@
 {
-  "name": "express-twitter-clone",
+  "name": "twitter-copy",
   "version": "1.0.0",
   "description": "A Twitter-like backend system using Express.js, Sequelize, Redis, and BullMQ.",
   "main": "src/server.js",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "eslint": "^8.55.0",
-    "nodemon": "^3.0.3",
+    "nodemon": "^3.1.10",
     "sequelize-cli": "^6.6.1"
   }
 }

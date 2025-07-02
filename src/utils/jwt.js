@@ -6,10 +6,11 @@ dotenv.config();
 const secret = process.env.JWT_SECRET;
 
 export function generateAccessToken(user) {
+  console.log('✅ JWT_SECRET:', process.env.JWT_SECRET);
   return jwt.sign(
     { userId: user.id },
-    process.env.JWT_ACCESS_SECRET,
-    { expiresIn: JWT_REFRESH_EXPIRES_IN}
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN}
   );
 }
 
@@ -22,7 +23,7 @@ export function generateRefreshToken(user) {
   return {
     token: jwt.sign(
       { userId: user.id, jti },
-      process.env.JWT_REFRESH_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }
     ),
     jti,

@@ -1,4 +1,5 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import sequelize from './config/db.js';
 import swaggerUi from 'swagger-ui-express';
@@ -6,6 +7,8 @@ import swaggerSpec from './config/swagger.js';
 import otpRoutes from './routes/otp.routes.js';
 import tweetRoutes from './routes/tweet.routes.js';
 import followRoutes from './routes/follow.routes.js';
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());

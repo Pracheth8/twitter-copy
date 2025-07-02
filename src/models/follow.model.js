@@ -4,23 +4,36 @@ import User from './user.model.js';
 
 const Follow = sequelize.define('Follow', {
   followerId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID, // ✅ Match User's UUID type
     allowNull: false,
+    references: {
+      model: User,
+      key: 'id',
+    }
   },
   followingId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID, // ✅ Match User's UUID type
     allowNull: false,
+    references: {
+      model: User,
+      key: 'id',
+    }
   }
-}, {
-  indexes: [
-    {
-      unique: true,
-      fields: ['followerId', 'followingId'],
-    },
-  ],
+}, {});
+
+// ✅ Define relationships
+User.belongsToMany(User, {
+  through: Follow,
+  as: 'Following',
+  foreignKey: 'followerId',
+  otherKey: 'followingId',
 });
 
-Follow.belongsTo(User, { foreignKey: 'followerId', as: 'Follower' });
-Follow.belongsTo(User, { foreignKey: 'followingId', as: 'Following' });
+User.belongsToMany(User, {
+  through: Follow,
+  as: 'Followers',
+  foreignKey: 'followingId',
+  otherKey: 'followerId',
+});
 
 export default Follow;

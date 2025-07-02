@@ -1,11 +1,12 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
 
-dotenv.config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize('twitterdb', 'postgres', 'password', {
+  host: 'localhost',
+  port: 5432,
   dialect: 'postgres',
   logging: false,
 });
 
-export default sequelize; //  This enables `import sequelize from ...`
+
+export default sequelize;
